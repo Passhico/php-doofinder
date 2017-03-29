@@ -100,5 +100,35 @@ class pccomDooFinderApiClient extends ManagementClient
 	{
 		return $this->currentSearchEngine; 
 	}
+	
+	function showTypes()
+	{
+		foreach ($this->currentSearchEngine->getTypes() as $tipo)
+			echo $tipo; 
+	}
+	
+	
+	/**todo: CRUD **/
+	function CreateArticulo($json)
+	{
+		$articulo_añadido = NULL; 
+		
+		echo "añadiendo artículo: ...<br>"; 
+		$articulo_añadido = $this->currentSearchEngine->addItem('product', $json);
+
+		return $articulo_añadido; 
+	}
+	function ReadArticulo($param)
+	{
+		
+	}
+	function UpdateArticulo($articulo)
+	{
+		
+	}
+	function DeleteArticulo($articulo)
+	{
+		
+	}
 
 }
