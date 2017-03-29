@@ -29,10 +29,17 @@ use Doofinder\Api\Management\Client as ManagementClient;
 class pccomDooFinderApiClient extends ManagementClient
 {
 	/**
-	 * El motor actual.
-	 * @var \Doofinder\Api\Management\SearchEngine
+	 * Array con todos los motorres disponibles. 
+	 * Se carga con getSearchEngines()
+	 * @var \Doofinder\Api\Management\SearchEngine[]
 	 */
-	private $searchEngine; 
+	private $searchEngines; 
+	
+	/**
+	 * El Motor que vamos a usar. 
+	 * @var \Doofinder\Api\Management\SearchEngine;  
+	 */
+	private $CurrentSearchEngine; 
 	
 	/**
 	 * 
@@ -70,19 +77,14 @@ class pccomDooFinderApiClient extends ManagementClient
 		var_dump($motor); 
 		}
 	}
-	function setSearchEngine($NombreMotor)
+	function setCurrentSearchEngine($name)
 	{
 		$this->searchEngines = $this->getSearchEngines(); 
 	}
 	
+	
+	
 }
-
-$apiKeyMIA = 'eu1-79cdbca29415f714e4bddb283397927e008065b4'; 
-$apiKeyJM = 'eu1-100811e0f54526963193683549b9682878a83d35'; 
-
-$fooFinder = new pccomDooFinderApiClient($apiKeyJM) ; 
-$fooFinder->showMotores(); 
-
 
 
 
