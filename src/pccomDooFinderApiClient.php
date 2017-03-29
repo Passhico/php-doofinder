@@ -18,8 +18,10 @@
  * 
  * 
  */
-require_once './../vendor/autoload.php';
-require_once './../t00lz/t00lz.php'; 
+
+
+require_once './t00lz/t00lz.php';
+require_once '../vendor/autoload.php';
 
 use Doofinder\Api\Management\Client as ManagementClient;
 
@@ -28,19 +30,13 @@ use Doofinder\Api\Management\Client as ManagementClient;
  */
 class pccomDooFinderApiClient extends ManagementClient
 {
+
 	/**
-	 * Array con todos los motorres disponibles. 
-	 * Se carga con getSearchEngines()
-	 * @var \Doofinder\Api\Management\SearchEngine[]
-	 */
-	private $searchEngines; 
-	
-	/**
-	 * El Motor que vamos a usar. 
+	 * El Motor que vamos a usar .
 	 * @var \Doofinder\Api\Management\SearchEngine;  
 	 */
-	private $CurrentSearchEngine; 
-	
+	private $currentSearchEngine;
+
 	/**
 	 * 
 	 * @param string $hashId El hash del motor. 
@@ -48,18 +44,15 @@ class pccomDooFinderApiClient extends ManagementClient
 	 */
 	public function __construct($apiKey)
 	{
-		parent::__construct($apiKey); 
-		
-	
+		parent::__construct($apiKey);
 	}
-	
-	
+
 	function seleccionaMotor($motor)
 	{
 		foreach ($this->getSearchEngines() as $motor)
 		{
 			//var_dump($motor); 
-			t00lz::dump($motor); 
+			t00lz::console_log($motor);
 		}
 	}
 
@@ -70,24 +63,42 @@ class pccomDooFinderApiClient extends ManagementClient
 	 */
 	function showAvailiableSearchEngines()
 	{
-	
+
 		foreach ($this->getSearchEngines() as $motor)
-		{		
-		//	t00lz::dump($motor);
-		var_dump($motor); 
+		{
+			var_dump($motor); 
+			
 		}
 	}
-	function setCurrentSearchEngine($name)
+
+	/**
+	 * Selecciona el motor según el nombre exacto (case sensitive)
+	 * que tenga. 
+	 * 
+	 * @param string $name Nombre del motor . 
+	 */
+	function setCurrentSearchEngineByName($name)
 	{
-		$this->searchEngines = $this->getSearchEngines(); 
+		foreach ($this->getSearchEngines() as $motor)
+		{
+			//echo $motor->name; 
+			
+			if((string)$motor->name == (string)$name)
+			{
+				echo "setteado Motor: {$motor->name}"; 
+				$this->currentSearchEngine = $motor; 
+			}
+		}
+		if (!$this->currentSearchEngine)
+		{
+			t00lz::console_log("No se ha encontrado Ningún motor con este nombre."); 
+			//$this->showAvailiableSearchEngines(); 
+		}
 	}
-	
-	
-	
+
+	function getCurrentSearchEngine()
+	{
+		return $this->currentSearchEngine; 
+	}
+
 }
-
-
-
-
-
-

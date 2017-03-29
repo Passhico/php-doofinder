@@ -5,3 +5,4 @@
 *.sublime-workspace
 composer.lock
 vendor/*
+/nbproject/private/
