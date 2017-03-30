@@ -125,7 +125,7 @@ class pccomDooFinderApiClient extends ManagementClient
 		}
 		return $articulo_añadido;
 	}
-	
+
 	/**
 	 * Crea hasta 100 artículos de una vez. 
 	 * 
@@ -137,18 +137,18 @@ class pccomDooFinderApiClient extends ManagementClient
 		if (!$arr100articulos)
 		{
 			echo "<BR>Error: Llamando a Create100Articulos(NULL)";
-			return 1; 
+			return 1;
 		}
-		
+
 		try
 		{
 			$this->currentSearchEngine->addItems(TYPE_PRODUCT, $arr100articulos);
 		} catch (Exception $ex)
 		{
-			echo " Error en Create100Articulos():" . $ex->getMessage(); 
+			echo " Error en Create100Articulos():" . $ex->getMessage();
+			return 1; 
 		}
-		
-		wait(1); 
+		return 0 ; 
 	}
 
 	function ReadArticulo($itemId)
@@ -161,11 +161,30 @@ class pccomDooFinderApiClient extends ManagementClient
 	{
 		$this->currentSearchEngine->updateItem(TYPE_PRODUCT, $articuloId, $articulo);
 	}
-	
 
 	function DeleteArticulo($articuloId)
 	{
 		$this->currentSearchEngine->deleteItem(TYPE_PRODUCT, $itemId);
 	}
 
+	/**
+	 * Devuelve un ScrollIterator de todos los artículos.
+	 * 
+	 * @return Doofinder\Api\Management\ScrollIterator[] | NULL
+	 */
+	function getAllArticulos()
+	{
+		/* @var $todosLosArticulos Doofinder\Api\Management\ScrollIterator */
+		$todosLosArticulos; 
+			
+		try
+		{
+			$todosLosArticulos =  $this->currentSearchEngine->items(TYPE_PRODUCT);
+		} catch (Exception $ex)
+		{
+			echo "getAllArticulos() Error : " . $ex->getMessage(); 
+			return NULL; 
+		}
+		return $todosLosArticulos; 
+	}
 }
