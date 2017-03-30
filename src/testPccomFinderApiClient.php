@@ -36,6 +36,6 @@ for ($i = 500; $i <= 599; $i++)
 
 echo "El array de articulos tiene " . count($arr100Articulos) . "<br>"; 
 
-$fooFinder->Create100Articulos($arr100articulos); 
+$fooFinder->Create100Articulos($arr100Articulos); 
 
 

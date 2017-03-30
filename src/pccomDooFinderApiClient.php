@@ -125,9 +125,21 @@ class pccomDooFinderApiClient extends ManagementClient
 		}
 		return $articulo_añadido;
 	}
-
+	
+	/**
+	 * Crea hasta 100 artículos de una vez. 
+	 * 
+	 * @return bool TRUE si ocurrión algún Error , FALSE si todo fue bien .
+	 * @param array[] $arr100articulos Array de Array de artículos.
+	 */
 	function Create100Articulos($arr100articulos)
 	{
+		if (!$arr100articulos)
+		{
+			echo "<BR>Error: Llamando a Create100Articulos(NULL)";
+			return 1; 
+		}
+		
 		try
 		{
 			$this->currentSearchEngine->addItems(TYPE_PRODUCT, $arr100articulos);
@@ -135,6 +147,8 @@ class pccomDooFinderApiClient extends ManagementClient
 		{
 			echo " Error en Create100Articulos():" . $ex->getMessage(); 
 		}
+		
+		wait(1); 
 	}
 
 	function ReadArticulo($itemId)
@@ -147,6 +161,7 @@ class pccomDooFinderApiClient extends ManagementClient
 	{
 		$this->currentSearchEngine->updateItem(TYPE_PRODUCT, $articuloId, $articulo);
 	}
+	
 
 	function DeleteArticulo($articuloId)
 	{
