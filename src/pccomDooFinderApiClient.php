@@ -11,10 +11,6 @@
  * CREDENCIALES PARA EL ENTORNO DE PRUEBAS CUENTA JM : 
  * Management API:eu1-100811e0f54526963193683549b9682878a83d35
  * 
- * CREDENCIALES PARA EL ENTORNO DE PRUEBAS CUENTA PASCUAL: 
- * 
- * 	Management API: eu1-79cdbca29415f714e4bddb283397927e008065b4
- *  Search API:     f05af2c30ce3af68bf27577892d2ada4
  * 
  * 
  */
@@ -146,20 +142,31 @@ class pccomDooFinderApiClient extends ManagementClient
 		} catch (Exception $ex)
 		{
 			echo " Error en Create100Articulos():" . $ex->getMessage();
-			return 1; 
+			return 1;
 		}
-		return 0 ; 
+		return 0;
 	}
 
 	function ReadArticulo($itemId)
 	{
-
-		return $this->currentSearchEngine->getItem(TYPE_PRODUCT, $itemId);
+		try
+		{
+			return $this->currentSearchEngine->getItem(TYPE_PRODUCT, $itemId);
+		} catch (Exception $exc)
+		{
+			echo $exc->getTraceAsString();
+		}
 	}
 
 	function UpdateArticulo($articuloId, $articulo)
 	{
-		$this->currentSearchEngine->updateItem(TYPE_PRODUCT, $articuloId, $articulo);
+		try
+		{
+			$this->currentSearchEngine->updateItem(TYPE_PRODUCT, $articuloId, $articulo);
+		} catch (Exception $exc)
+		{
+			echo $exc->getTraceAsString();
+		}
 	}
 
 	function DeleteArticulo($articuloId)
@@ -170,21 +177,39 @@ class pccomDooFinderApiClient extends ManagementClient
 	/**
 	 * Devuelve un ScrollIterator de todos los artículos.
 	 * 
+	 * //obtenemos todos los ariculos  Example de uso : 
+	 * 
+	  if ($items = $fooFinder->getAllArticulos())
+	  {
+	  foreach ($items as $item)
+	  {
+	  echo $item['title'];
+	  echo "<br>";
+	  sleep(1);
+	  }
+	  } else
+	  {
+	  echo "getAllarticulos() return NULL";
+	  }
+
+	 * 
+	 * 
 	 * @return Doofinder\Api\Management\ScrollIterator[] | NULL
 	 */
 	function getAllArticulos()
 	{
 		/* @var $todosLosArticulos Doofinder\Api\Management\ScrollIterator */
-		$todosLosArticulos; 
-			
+		$todosLosArticulos;
+
 		try
 		{
-			$todosLosArticulos =  $this->currentSearchEngine->items(TYPE_PRODUCT);
+			$todosLosArticulos = $this->currentSearchEngine->items(TYPE_PRODUCT);
 		} catch (Exception $ex)
 		{
-			echo "getAllArticulos() Error : " . $ex->getMessage(); 
-			return NULL; 
+			echo "getAllArticulos() Error : " . $ex->getMessage();
+			return NULL;
 		}
-		return $todosLosArticulos; 
+		return $todosLosArticulos;
 	}
+
 }

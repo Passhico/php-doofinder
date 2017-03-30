@@ -48,19 +48,3 @@ if ($fooFinder->Create100Articulos($arr100Articulos))
 {
 	echo "100 ariculos insertados..";
 }
-
-
-//obtenemos todos los ariculos : 
-if ($items = $fooFinder->getAllArticulos())
-{
-	foreach ($items as $item)
-	{
-		echo $item['title'];
-		echo "<br>";
-		sleep(1); 
-	}
-} else
-{
-	echo "getAllarticulos() return NULL";
-}
-
