@@ -20,8 +20,8 @@
  */
 
 
-require_once './t00lz/t00lz.php';
-require_once '../vendor/autoload.php';
+require_once realpath($_SERVER["DOCUMENT_ROOT"] . '/t00lz/t00lz.php');
+require_once realpath($_SERVER["DOCUMENT_ROOT"] . '/../vendor/autoload.php');
 
 use Doofinder\Api\Management\Client as ManagementClient;
 
@@ -36,13 +36,15 @@ class pccomDooFinderApiClient extends ManagementClient
 	 * @var \Doofinder\Api\Management\SearchEngine;  
 	 */
 	private $currentSearchEngine;
+	
+	
 
 	/**
 	 * 
 	 * @param string $hashId El hash del motor. 
 	 * @param string $apiKey La Management Apikey
 	 */
-	public function __construct($apiKey)
+	public function __construct($apiKey, $searchEngineName = null)
 	{
 		parent::__construct($apiKey);
 	}
@@ -79,26 +81,27 @@ class pccomDooFinderApiClient extends ManagementClient
 	 */
 	function setCurrentSearchEngineByName($name)
 	{
+		//x cada Engine disponible 
 		foreach ($this->getSearchEngines() as $motor)
 		{
-			//echo $motor->name; 
-			
+			//si el nombre del engine es = a name
 			if((string)$motor->name == (string)$name)
 			{
-				echo "setteado Motor: {$motor->name}"; 
+				//asignamos motor
 				$this->currentSearchEngine = $motor; 
 			}
 		}
+		//Si no se ha podido seleccionar petamos y avisamos. 
 		if (!$this->currentSearchEngine)
 		{
-			t00lz::console_log("No se ha encontrado Ningún motor con este nombre."); 
+			die('Selecciona un nombre de motor correcto'); 
 			//$this->showAvailiableSearchEngines(); 
 		}
 	}
 
-	function getCurrentSearchEngine()
+	function getCurrentSearchEngineName()
 	{
-		return $this->currentSearchEngine; 
+		return $this->currentSearchEngine->name; 
 	}
 	
 	function showTypes()
@@ -112,14 +115,14 @@ class pccomDooFinderApiClient extends ManagementClient
 	function CreateArticulo($json)
 	{
 		$articulo_añadido = NULL; 
-		
-		echo "añadiendo artículo: ...<br>"; 
 		$articulo_añadido = $this->currentSearchEngine->addItem('product', $json);
 
 		return $articulo_añadido; 
 	}
-	function ReadArticulo($param)
+	function ReadArticulo($itemId)
 	{
+		
+		return $this->currentSearchEngine->getItem($datatype, $itemId);
 		
 	}
 	function UpdateArticulo($articulo)
