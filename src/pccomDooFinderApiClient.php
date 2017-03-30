@@ -18,12 +18,13 @@
  * 
  * 
  */
-
-
 require_once realpath($_SERVER["DOCUMENT_ROOT"] . '/t00lz/t00lz.php');
 require_once realpath($_SERVER["DOCUMENT_ROOT"] . '/../vendor/autoload.php');
 
 use Doofinder\Api\Management\Client as ManagementClient;
+
+//se deja en define por si algún día le cambian el nombre. 
+define('TYPE_PRODUCT', 'product');
 
 /**
  * Cliente para CRUD de los items del feeder usando Api de Doofinder.
@@ -36,8 +37,14 @@ class pccomDooFinderApiClient extends ManagementClient
 	 * @var \Doofinder\Api\Management\SearchEngine;  
 	 */
 	private $currentSearchEngine;
-	
-	
+
+	/**
+	 * Por defecto siempre 'product' , se inicializa 
+	 * en el __construct confirmado con JM . 
+	 * si algún día se cambia poner getters y setters.
+	 * @var type 
+	 */
+	private $currentType;
 
 	/**
 	 * 
@@ -47,15 +54,8 @@ class pccomDooFinderApiClient extends ManagementClient
 	public function __construct($apiKey, $searchEngineName = null)
 	{
 		parent::__construct($apiKey);
-	}
-
-	function seleccionaMotor($motor)
-	{
-		foreach ($this->getSearchEngines() as $motor)
-		{
-			//var_dump($motor); 
-			t00lz::console_log($motor);
-		}
+		$this->currentType = TYPE_PRODUCT;
+		$this->setCurrentSearchEngineByName($searchEngineName);
 	}
 
 	/**
@@ -66,10 +66,11 @@ class pccomDooFinderApiClient extends ManagementClient
 	function showAvailiableSearchEngines()
 	{
 
+		$n_motor = 1;
 		foreach ($this->getSearchEngines() as $motor)
 		{
-			var_dump($motor); 
-			
+			echo "<br>{$n_motor}: '" . $motor->name . "'<br>";
+			$n_motor++;
 		}
 	}
 
@@ -85,53 +86,71 @@ class pccomDooFinderApiClient extends ManagementClient
 		foreach ($this->getSearchEngines() as $motor)
 		{
 			//si el nombre del engine es = a name
-			if((string)$motor->name == (string)$name)
+			if ((string) $motor->name == (string) $name)
 			{
 				//asignamos motor
-				$this->currentSearchEngine = $motor; 
+				$this->currentSearchEngine = $motor;
 			}
 		}
 		//Si no se ha podido seleccionar petamos y avisamos. 
 		if (!$this->currentSearchEngine)
 		{
-			die('Selecciona un nombre de motor correcto'); 
-			//$this->showAvailiableSearchEngines(); 
+			$this->showAvailiableSearchEngines();
+			die("Nombre de momtor: {$name} no existe!");
 		}
 	}
 
 	function getCurrentSearchEngineName()
 	{
-		return $this->currentSearchEngine->name; 
+		return $this->currentSearchEngine->name;
 	}
-	
+
 	function showTypes()
 	{
 		foreach ($this->currentSearchEngine->getTypes() as $tipo)
-			echo $tipo; 
+			echo $tipo;
 	}
-	
-	
-	/**todo: CRUD **/
-	function CreateArticulo($json)
-	{
-		$articulo_añadido = NULL; 
-		$articulo_añadido = $this->currentSearchEngine->addItem('product', $json);
 
-		return $articulo_añadido; 
+	/*	 * todo: CRUD * */
+
+	function CreateArticulo($articulo)
+	{
+		$articulo_añadido = NULL;
+		try
+		{
+			$articulo_añadido = $this->currentSearchEngine->addItem(TYPE_PRODUCT, $articulo);
+		} catch (Exception $ex)
+		{
+			echo " Error en CreateArticulo():" . $ex->getMessage();
+		}
+		return $articulo_añadido;
 	}
+
+	function Create100Articulos($arr100articulos)
+	{
+		try
+		{
+			$this->currentSearchEngine->addItems(TYPE_PRODUCT, $arr100articulos);
+		} catch (Exception $ex)
+		{
+			echo " Error en Create100Articulos():" . $ex->getMessage(); 
+		}
+	}
+
 	function ReadArticulo($itemId)
 	{
-		
-		return $this->currentSearchEngine->getItem($datatype, $itemId);
-		
+
+		return $this->currentSearchEngine->getItem(TYPE_PRODUCT, $itemId);
 	}
-	function UpdateArticulo($articulo)
+
+	function UpdateArticulo($articuloId, $articulo)
 	{
-		
+		$this->currentSearchEngine->updateItem(TYPE_PRODUCT, $articuloId, $articulo);
 	}
-	function DeleteArticulo($articulo)
+
+	function DeleteArticulo($articuloId)
 	{
-		
+		$this->currentSearchEngine->deleteItem(TYPE_PRODUCT, $itemId);
 	}
 
 }
