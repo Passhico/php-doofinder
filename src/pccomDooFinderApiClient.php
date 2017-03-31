@@ -152,10 +152,12 @@ class pccomDooFinderApiClient extends ManagementClient
 		try
 		{
 			return $this->currentSearchEngine->getItem(TYPE_PRODUCT, $itemId);
+			
 		} catch (Exception $exc)
 		{
 			echo $exc->getTraceAsString();
 		}
+		
 	}
 
 	function UpdateArticulo($articuloId, $articulo)

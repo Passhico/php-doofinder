@@ -4,8 +4,8 @@
 ini_set('date.timezone', 'Europe/Madrid');
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
+set_time_limit(3600); 
 
-$apiKeyMIA = 'eu1-79cdbca29415f714e4bddb283397927e008065b4';
 $apiKeyJM = 'eu1-100811e0f54526963193683549b9682878a83d35';
 
 define('APIKEY', $apiKeyJM);
@@ -17,17 +17,15 @@ require_once realpath($_SERVER["DOCUMENT_ROOT"]) . "/pccomDooFinderApiClient.php
 //arrancamos el cliente.
 $fooFinder = new pccomDooFinderApiClient(APIKEY, SEARCH_ENGINE_NAME);
 
-//setteamos el motor de busqueda . 
-$fooFinder->setCurrentSearchEngineByName(SEARCH_ENGINE_NAME);
 echo "<br>Seleccionado: " . $fooFinder->getCurrentSearchEngineName() . "<br>";
 
 
 //Creamos un Array con 100 artículos.
 $arr100Articulos = array();
-for ($i = 500; $i <= 599; $i++)
+for ($i = 600; $i <= 699; $i++)
 {
 	$articulo4Create = array(
-		'title' => 'articuloAutomatico' . $i,
+		'title' => 'articuloBLOQUE100' . $i,
 		'id_articulo' => $i,
 		'price' => '000000',
 		'rating' => (int) '4',
@@ -43,7 +41,7 @@ echo "El array de articulos tiene " . count($arr100Articulos) . "<br>";
 
 if ($fooFinder->Create100Articulos($arr100Articulos))
 {
-	echo "No se han insertado artículos de golpe ";
+	echo "No se han insertado artículos";
 } else
 {
 	echo "100 ariculos insertados..";
